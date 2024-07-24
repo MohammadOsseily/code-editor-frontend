@@ -11,5 +11,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.PAT }}
-        repository: MohammadOsseily/code-editor-frontend
+        repository: MohammadOsseily/code-editor-fullstack
         event-type: update-submodules-event

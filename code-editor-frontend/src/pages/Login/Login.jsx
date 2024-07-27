@@ -25,7 +25,10 @@ const Login = () => {
                     <button type="submit">Login</button>
                     <div className="register-link">
                         <p>
-                            Don't have an account? <a onClick={handleRegister}>Register</a>
+                            Don't have an account? 
+                            <button type="button" onClick={handleRegister} className="link-button">
+                                Register
+                            </button>
                         </p>
                     </div>
                 </form>

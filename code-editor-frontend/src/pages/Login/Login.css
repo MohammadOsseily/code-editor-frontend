@@ -7,20 +7,20 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     color: #fff;
-  }
-  
-  form h1 {
+}
+
+form h1 {
     font-size: 36px;
     text-align: center;
-  }
-  
-  .input-box {
+}
+
+.input-box {
     position: relative;
     width: 100%;
     margin: 30px 0;
-  }
-  
-  .input-box input {
+}
+
+.input-box input {
     width: 100%;
     padding: 10px 20px;
     background: transparent;
@@ -28,17 +28,17 @@
     border-radius: 40px;
     font-size: 16px;
     color: #fff;
-  }
-  
-  .input-box .icon {
+}
+
+.input-box .icon {
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 16px;
-  }
-  
-  form button {
+}
+
+form button {
     width: 100%;
     padding: 10px 0;
     background: #fff;
@@ -47,16 +47,20 @@
     color: #333;
     font-weight: bold;
     cursor: pointer;
-  }
-  
-  .register-link {
+}
+
+.register-link {
     text-align: center;
     margin-top: 15px;
-  }
-  
-  .register-link a {
+}
+
+.link-button {
+    background: none;
+    border: none;
     color: #fff;
-    text-decoration: none;
+    text-decoration: underline;
+    cursor: pointer;
     font-weight: bold;
-  }
-  
+    padding: 0;
+    font-size: inherit;
+}

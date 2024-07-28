@@ -4,12 +4,14 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Admin from "./pages/Admin/Admin";
 import EditUser from "./pages/Admin/EditUser";
+import Home from "./pages/Home/page";
 
 function App() {
   return (
     <Router>
       <div>
         <Routes>
+          <Route path="/Home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<Admin />} />

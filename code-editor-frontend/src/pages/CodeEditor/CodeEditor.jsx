@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Box, HStack, Button, VStack } from "@chakra-ui/react";
+import { Box, HStack, Button } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import LanguageSelector from "./LanguageSelector";
 import Output from "./Output";
 import { getSuggestions } from "../../api";
-import axios from "axios";
 
-const CodeEditor = ({ userId }) => {
+
+const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
@@ -56,10 +56,19 @@ const CodeEditor = ({ userId }) => {
     }
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("User is not authenticated.");
+        return;
+      }
+      
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.sub; 
+      console.log(userId);
       const response = await axios.post(
         "http://127.0.0.1:8000/api/code_submission",
         {
-          user_id: 7,
+          user_id: userId,
           code: value,
         }
       );
@@ -78,10 +87,19 @@ const CodeEditor = ({ userId }) => {
             <LanguageSelector language={language} onSelect={onSelect} />
             <Button
               style={{ alignSelf: "center", marginTop: "35px" }}
+            <Button
+              style={{ alignSelf: "center", marginTop: "35px" }}
               onClick={() => setIsCopilotEnabled(!isCopilotEnabled)}
               colorScheme={isCopilotEnabled ? "green" : "red"}
             >
               {isCopilotEnabled ? "Disable" : "Enable"} Copilot
+            </Button>
+            <Button
+              style={{ alignSelf: "center", marginTop: "35px" }}
+              onClick={handleSaveCode}
+              colorScheme="blue"
+            >
+              Save Code
             </Button>
             <Button
               style={{ alignSelf: "center", marginTop: "35px" }}

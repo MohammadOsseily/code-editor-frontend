@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.empty-space {
+  height: 1px;
+}
+
+.size {
+  width: 95%;
+}
+
+.icon {
+  font-size: 30px; 
+  cursor: pointer;
+}
+
+.download-icon {
+  color: #263340; 
+  margin-right: 10px; 
+}
+
+.delete-icon {
+  color: #dc3545; 
+}
+
+.secondary-icon {
+  stroke: black; 
+}

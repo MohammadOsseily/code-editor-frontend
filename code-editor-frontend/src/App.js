@@ -9,6 +9,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme';
 import Home from './pages/Home/page'
 import Navebar from './components/Navbar';
+import CodeSubmissions from './pages/CodeSubmissions/CodeSubmissions';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               </ChakraProvider>
             }
           />
+          <Route path='/submissions' element={<CodeSubmissions />} />
         </Routes>
       </div>
     </Router>

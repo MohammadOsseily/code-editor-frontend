@@ -19,24 +19,12 @@ function App() {
   return (
     <Router>
       <div>
+        <Navebar />
         <Routes>
-          <Route path="/Home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/edit-user/:id" element={<EditUser />} />
-          <Route
-            path="/editor"
-            element={
-              <ChakraProvider theme={theme}>
-                <CodeEditor />
-              </ChakraProvider>
-            }
-          />
         </Routes>
       </div>
     </Router>

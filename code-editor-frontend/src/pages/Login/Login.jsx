@@ -3,6 +3,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -16,8 +17,17 @@ const Login = () => {
                 email,
                 password
             });
-            localStorage.setItem("token", response.data.authorization.token);
-            navigate("/dashboard");
+            const token = response.data.authorization.token;
+            localStorage.setItem("token", token);
+
+            const decodedToken = jwtDecode(token);
+            const userRole = decodedToken.role;
+
+            if (userRole === "admin") {
+                navigate("/admin"); 
+            } else {
+                navigate("/submissions"); 
+            }
         } catch (error) {
             console.error("Login error", error);
         }

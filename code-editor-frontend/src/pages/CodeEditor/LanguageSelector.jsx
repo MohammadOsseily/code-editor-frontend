@@ -14,7 +14,7 @@ import {
   
   const LanguageSelector = ({ language, onSelect }) => {
     return (
-      <Box ml={2} mb={4}>
+      <Box ml={2}>
         <Text mb={2} fontSize="lg">
           Language:
         </Text>

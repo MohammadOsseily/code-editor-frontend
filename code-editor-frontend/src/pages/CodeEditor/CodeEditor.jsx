@@ -1,15 +1,17 @@
 import { useRef, useState } from "react";
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, HStack, Button, VStack } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import LanguageSelector from "./LanguageSelector";
 import Output from "./Output";
 import { getSuggestions } from "../../api";
+
 
 const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [typingTimeout, setTypingTimeout] = useState(null);
+  const [isCopilotEnabled, setIsCopilotEnabled] = useState(true);
 
   const onMount = (editor) => {
     editorRef.current = editor;
@@ -18,7 +20,7 @@ const CodeEditor = () => {
 
   const onSelect = (language) => {
     setLanguage(language);
-    setValue(""); // Reset the editor content when changing language
+    setValue("");
   };
 
   const handleChange = (newValue) => {
@@ -28,29 +30,38 @@ const CodeEditor = () => {
       clearTimeout(typingTimeout);
     }
 
-    setTypingTimeout(
-      setTimeout(async () => {
-        if (editorRef.current) {
-          const sourceCode = editorRef.current.getValue();
-          try {
-            const suggestions = await getSuggestions(sourceCode);
-            // Only append if suggestions are new
-            if (suggestions && !sourceCode.includes(suggestions)) {
-              setValue((prevValue) => `${prevValue.trim()}\n${suggestions}`);
+    if (isCopilotEnabled) {
+      setTypingTimeout(
+        setTimeout(async () => {
+          if (editorRef.current) {
+            const sourceCode = editorRef.current.getValue();
+            try {
+              const suggestions = await getSuggestions(sourceCode);
+              if (suggestions && !sourceCode.includes(suggestions)) {
+                setValue((prevValue) => `${prevValue.trim()}\n${suggestions}`);
+              }
+            } catch (error) {
+              console.error("Error fetching suggestions:", error);
             }
-          } catch (error) {
-            console.error("Error fetching suggestions:", error);
           }
-        }
-      }, 1000) // Adjust the delay as needed
-    );
+        }, 1000)
+      );
+    }
   };
 
   return (
-    <Box>
+    <Box className="h-screen">
       <HStack spacing={4}>
         <Box w="50%">
-          <LanguageSelector language={language} onSelect={onSelect} />
+          <HStack spacing={2} mb={4}>
+            <LanguageSelector language={language} onSelect={onSelect} />
+            <Button style={{alignSelf:"center" , marginTop:"35px"}}
+              onClick={() => setIsCopilotEnabled(!isCopilotEnabled)}
+              colorScheme={isCopilotEnabled ? "green" : "red"}
+            >
+              {isCopilotEnabled ? "Disable" : "Enable"} Copilot
+            </Button>
+          </HStack>
           <Editor
             options={{
               minimap: {

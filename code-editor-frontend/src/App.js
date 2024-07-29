@@ -4,6 +4,9 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Admin from './pages/Admin/Admin';
 import EditUser from './pages/Admin/EditUser';
+import CodeEditor from './pages/CodeEditor/CodeEditor';
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from './theme';
 
 function App() {
   return (
@@ -14,6 +17,14 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/edit-user/:id' element={<EditUser />} />
+          <Route 
+                        path="/editor" 
+                        element={
+                            <ChakraProvider theme={theme}>
+                                <CodeEditor />
+                            </ChakraProvider>
+                        } 
+                    />
         </Routes>
       </div>
     </Router>

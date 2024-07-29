@@ -3,26 +3,35 @@ import "./CodeSubmissions.css";
 import { IoIosDownload } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode"; 
 
 const EmptyComponent = () => {
   return <div className="empty-space"></div>;
 };
 
-const CodeSubmissions = ({ userId }) => {
+const CodeSubmissions = () => {
   const [codes, setCodes] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [codeToDelete, setCodeToDelete] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:8000/api/code_submission/7`)
-      .then((response) => {
-        console.log('Fetched codes:', response.data.codes);
-        setCodes(response.data.codes);
-      })
-      .catch((error) => {
-        console.error("Error fetching user codes:", error);
-      });
+
+    const token = localStorage.getItem("token");
+    if (token) {
+
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.sub; 
+
+      axios
+        .get(`http://127.0.0.1:8000/api/code_submission/${userId}`)
+        .then((response) => {
+          console.log('Fetched codes:', response.data.codes);
+          setCodes(response.data.codes);
+        })
+        .catch((error) => {
+          console.error("Error fetching user codes:", error);
+        });
+    }
   }, []);
 
   const handleDownload = (code, filename) => {

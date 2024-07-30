@@ -53,11 +53,11 @@ const EditUser = () => {
   };
 
   return (
-    <div className="edit-user-container p-4">
-      <h1 className="text-2xl font-bold mb-4">Edit User</h1>
+    <div className="edit-user-container p-4 bg-secondary h-screen">
+      <h1 className="text-2xl font-bold mb-4 text-white">Edit User</h1>
       <form className="edit-user-form">
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+          <label className="block text-white text-sm font-bold mb-2" htmlFor="name">
             Name
           </label>
           <input
@@ -69,7 +69,7 @@ const EditUser = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+          <label className="block text-white text-sm font-bold mb-2" htmlFor="email">
             Email
           </label>
           <input

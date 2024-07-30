@@ -7,9 +7,11 @@ import EditUser from './pages/Admin/EditUser';
 import CodeEditor from './pages/CodeEditor/CodeEditor';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme';
-import Home from './pages/Home/page'
+import Home from './pages/Home/page';
 import Navebar from './components/Navbar';
 import CodeSubmissions from './pages/CodeSubmissions/CodeSubmissions';
+import ProtectedRoute from './components/ProtectedRoute'; 
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   return (
@@ -20,8 +22,8 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/admin' element={<Admin />} />
-          <Route path='/edit-user/:id' element={<EditUser />} />
+          <Route path='/admin' element={<AdminRoute><Admin /></AdminRoute>} />
+          <Route path='/edit-user/:id' element={<AdminRoute><EditUser /></AdminRoute>} />
           <Route
             path="/editor"
             element={
@@ -30,7 +32,7 @@ function App() {
               </ChakraProvider>
             }
           />
-          <Route path='/submissions' element={<CodeSubmissions />} />
+          <Route path='/submissions' element={<ProtectedRoute><CodeSubmissions /></ProtectedRoute>} />
         </Routes>
       </div>
     </Router>

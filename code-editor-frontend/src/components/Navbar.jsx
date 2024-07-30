@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../pages/Home/styles.css";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
 const Navebar = () => {
@@ -13,14 +13,14 @@ const Navebar = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        setRole(decodedToken.role); 
-        setIsLoggedIn(true); 
+        setRole(decodedToken.role);
+        setIsLoggedIn(true);
       } catch (error) {
         console.error("Invalid token", error);
-        setIsLoggedIn(false); 
+        setIsLoggedIn(false);
       }
     } else {
-      navigate("/login"); 
+      navigate("/login");
     }
   }, [navigate]);
 

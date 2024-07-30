@@ -1,6 +1,18 @@
+import React, { useEffect, useState } from "react";
 import "../pages/Home/styles.css";
+import jwtDecode from "jwt-decode"; 
 
 const Navebar = () => {
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setRole(decodedToken.role); 
+    }
+  }, []);
+
   return (
     <div className="navbar bg-primary min-h-20">
       <div className="navbar-start">
@@ -25,48 +37,46 @@ const Navebar = () => {
             tabIndex={0}
             className="menu menu-sm text-2xl dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li className="">
-              <a>Item 1</a>
-            </li>
-            <li>
-              <a>Parent</a>
-              <ul className="p-2">
+            {role === "admin" ? (
+              <li>
+                <a href="/admin">Users</a>
+              </li>
+            ) : (
+              <>
                 <li>
-                  <a>Submenu 1</a>
+                  <a href="/home">Home</a>
                 </li>
                 <li>
-                  <a>Submenu 2</a>
+                  <a href="/submissions">Submissions</a>
                 </li>
-              </ul>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+                <li>
+                  <a href="/editor">Editor</a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
-        <a className="btn btn-ghost text-2xl">daisyUI</a>
+        <a className="btn btn-ghost text-2xl">AppName</a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal text-xl px-1">
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <a>Item 3</a>
-          </li>
+          {role === "admin" ? (
+            <li>
+              <a href="/admin">Users</a>
+            </li>
+          ) : (
+            <>
+              <li>
+                <a href="/home">Home</a>
+              </li>
+              <li>
+                <a href="/submissions">Submissions</a>
+              </li>
+              <li>
+                <a href="/editor">Editor</a>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       <div className="navbar-end flex flex-row">
@@ -82,4 +92,5 @@ const Navebar = () => {
     </div>
   );
 };
+
 export default Navebar;

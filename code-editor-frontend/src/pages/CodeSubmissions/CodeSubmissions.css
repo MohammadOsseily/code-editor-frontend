@@ -27,3 +27,11 @@
 .secondary-icon {
   stroke: black; 
 }
+
+.flex-end{
+  align-self: flex-end;
+}
+
+.full-width{
+  width: 100vw;
+}

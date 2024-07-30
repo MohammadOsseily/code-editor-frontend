@@ -1,17 +1,35 @@
 import React, { useEffect, useState } from "react";
 import "../pages/Home/styles.css";
-import jwtDecode from "jwt-decode"; 
+import {jwtDecode} from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const Navebar = () => {
   const [role, setRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decodedToken = jwtDecode(token);
-      setRole(decodedToken.role); 
+      try {
+        const decodedToken = jwtDecode(token);
+        setRole(decodedToken.role); 
+        setIsLoggedIn(true); 
+      } catch (error) {
+        console.error("Invalid token", error);
+        setIsLoggedIn(false); 
+      }
+    } else {
+      navigate("/login"); 
     }
-  }, []);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setRole(null);
+    navigate("/login");
+  };
 
   return (
     <div className="navbar bg-primary min-h-20">
@@ -80,14 +98,24 @@ const Navebar = () => {
         </ul>
       </div>
       <div className="navbar-end flex flex-row">
-        <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm  md:h-16 md:w-44 md:text-base">
-          <div className="pl-2 text-base text-white hover:text-gray-500">
-            <a href={"/login"}>Login</a>
+        {isLoggedIn ? (
+          <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm  md:h-16 md:w-44 md:text-base">
+            <div className="pl-2 text-base text-white hover:text-gray-500">
+              <button onClick={handleLogout} className="btn btn-ghost">
+                Logout
+              </button>
+            </div>
           </div>
-          <div className=" ml-1 flex h-12 w-16 items-center justify-center rounded-full bg-gray-300 text-lg  hover:brightness-90 md:ml-2 md:h-12 md:w-20   md:text-base">
-            <a href={"/register"}>Sign Up</a>
+        ) : (
+          <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm  md:h-16 md:w-44 md:text-base">
+            <div className="pl-2 text-base text-white hover:text-gray-500">
+              <a href={"/login"}>Login</a>
+            </div>
+            <div className=" ml-1 flex h-12 w-16 items-center justify-center rounded-full bg-gray-300 text-lg  hover:brightness-90 md:ml-2 md:h-12 md:w-20   md:text-base">
+              <a href={"/register"}>Sign Up</a>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -9,13 +9,25 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme";
 import Home from "./pages/Home/page";
 import Navebar from "./components/Navbar";
+import CodeSubmissions from "./pages/CodeSubmissions/CodeSubmissions";
+
+import "./pusher";
 
 function App() {
   return (
     <Router>
       <div>
         <Navebar />
+        {/* <ChatPage /> */}
+        <div className="container mx-auto p-4">
+          <ChatPage />
+        </div>
         <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/edit-user/:id" element={<EditUser />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -29,6 +41,7 @@ function App() {
               </ChakraProvider>
             }
           />
+          <Route path="/submissions" element={<CodeSubmissions />} />
           <Route path="/submissions" element={<CodeSubmissions />} />
         </Routes>
       </div>

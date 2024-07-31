@@ -1,9 +1,9 @@
-import React from 'react';
-import './Footer.css';
+import React from "react";
+import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer bg-secondary">
       <aside className="footer-content">
         <svg
           width="36"

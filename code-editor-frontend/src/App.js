@@ -14,6 +14,7 @@ import CodeSubmissions from "./pages/CodeSubmissions/CodeSubmissions";
 import "./pusher";
 import ChatPage from "./pages/Chat/page";
 import MessagePage from "./pages/Message/page";
+import Footer from "./components/footer/Footer";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/submissions" element={<CodeSubmissions />} />
           <Route path="/submissions" element={<CodeSubmissions />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

@@ -7,6 +7,8 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [file, setFile] = useState(null);
   const [reload, setReload] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,21 +30,36 @@ const Admin = () => {
   };
 
   const handleDeleteButton = (userId) => {
-    if (window.confirm(`Are you sure you want to delete the user with ID ${userId}?`)) {
-      axios
-        .post(`http://127.0.0.1:8000/api/user/delete/${userId}`)
-        .then((response) => {
-          if (response.data === "User deleted" || response.status === 200) {
-            setUsers(users.filter((user) => user.id !== userId));
-          } else {
-            alert("Failed to delete user. Please try again.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error deleting user:", error);
-          alert("An error occurred while deleting the user. Please try again.");
-        });
+    setUserToDelete(userId);
+    setShowConfirmation(true);
+  };
+
+  const confirmDelete = () => {
+    if (!userToDelete) {
+      console.error("No user selected for deletion.");
+      return;
     }
+
+    axios
+      .post(`http://127.0.0.1:8000/api/user/delete/${userToDelete}`)
+      .then((response) => {
+        if (response.data === "User deleted" || response.status === 200) {
+          setUsers(users.filter((user) => user.id !== userToDelete));
+          setShowConfirmation(false);
+          setUserToDelete(null);
+        } else {
+          alert("Failed to delete user. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+        alert("An error occurred while deleting the user. Please try again.");
+      });
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmation(false);
+    setUserToDelete(null);
   };
 
   const handleFileChange = (event) => {
@@ -65,7 +82,6 @@ const Admin = () => {
         },
       })
       .then((response) => {
-        alert("Data imported successfully!");
         if (Array.isArray(response.data)) {
           setUsers(response.data);
         } else {
@@ -87,11 +103,24 @@ const Admin = () => {
           <h1 className="text-2xl font-bold mb-4 text-white">Users</h1>
           <div>
             <input type="file" onChange={handleFileChange} />
-            <button className="btn btn-outline btn-info" onClick={handleImportData}>
+            <button className="btn btn-outline btn-info ml-2" onClick={handleImportData}>
               Import Data
             </button>
           </div>
         </div>
+        {showConfirmation && (
+          <div role="alert" className="alert bg-success mt-5 mb-5">
+            <span>Are you sure you want to delete this user?</span>
+            <div className="flex justify-end mt-4" style={{ width: 'fit-content', marginLeft: 'auto' }}>
+              <button className="btn btn-sm mr-2 bg-neutral" onClick={cancelDelete}>
+                Cancel
+              </button>
+              <button className="btn btn-sm btn-error" onClick={confirmDelete}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        )}
         <table className="table-auto w-full rounded-lg userdiv">
           <thead>
             <tr>

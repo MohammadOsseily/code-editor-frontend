@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Box, HStack, Button } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import LanguageSelector from "./LanguageSelector";
@@ -9,26 +9,160 @@ import { jwtDecode } from "jwt-decode";
 
 const CodeEditor = () => {
   const editorRef = useRef();
+  const monacoRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [typingTimeout, setTypingTimeout] = useState(null);
   const [isCopilotEnabled, setIsCopilotEnabled] = useState(true);
+  const [suggestions, setSuggestions] = useState("");
+  const [showHint, setShowHint] = useState(false);
+  const [hintWidget, setHintWidget] = useState(null);
 
-  const onMount = (editor) => {
+  useEffect(() => {
+    console.log("Component mounted");
+    return () => console.log("Component unmounted");
+  }, []);
+
+  useEffect(() => {
+    console.log("suggestions state updated:", suggestions);
+    if (hintWidget && editorRef.current) {
+      if (showHint && suggestions) {
+        console.log("Hint Widget: Showing hint with suggestions:", suggestions);
+        hintWidget.updateContent(suggestions);
+        hintWidget.show();
+      } else {
+        console.log("Hint Widget: Hiding hint");
+        hintWidget.hide();
+      }
+    }
+  }, [showHint, suggestions, hintWidget]);
+
+  const onMount = (editor, monaco) => {
+    console.log("onMount: Editor and Monaco instances set");
     editorRef.current = editor;
+    monacoRef.current = monaco;
     editor.focus();
+
+    setHintWidget(createHintWidget(editor, monaco));
+
+    editor.addAction({
+      id: "apply-suggestion",
+      label: "Apply Suggestion",
+      keybindings: [monaco.KeyCode.Tab],
+      run: () => {
+        console.log("Action: Tab key pressed - running applySuggestion");
+        applySuggestion();
+      },
+    });
+
+    editor.onKeyDown((e) => {
+      if (e.keyCode === monaco.KeyCode.Tab) {
+        console.log("Event: Tab key pressed");
+        e.preventDefault();
+        applySuggestion();
+      } else {
+        console.log("Event: Other key pressed");
+        setShowHint(false);
+        hintWidget && hintWidget.hide();
+      }
+    });
+  };
+
+  const applySuggestion = () => {
+    console.log("applySuggestion: Function called");
+
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+
+    if (!editor || !monaco) {
+      console.log("applySuggestion: Editor or Monaco instance not ready");
+      return;
+    }
+
+    console.log("applySuggestion: Current suggestions state:", suggestions);
+
+    if (suggestions && suggestions.trim() !== "") {
+      console.log("applySuggestion: Applying suggestion:", suggestions);
+
+      const position = editor.getPosition();
+      const range = new monaco.Range(
+        position.lineNumber,
+        position.column,
+        position.lineNumber,
+        position.column
+      );
+
+      editor.executeEdits("apply-suggestion", [
+        {
+          range: range,
+          text: suggestions,
+          forceMoveMarkers: true,
+        },
+      ]);
+
+      setValue(editor.getValue());
+      console.log("applySuggestion: Updated editor value:", editor.getValue());
+
+      setSuggestions("");
+      setShowHint(false);
+      hintWidget && hintWidget.hide();
+    } else {
+      console.log("applySuggestion: No suggestions available or state issue");
+    }
+  };
+
+  const createHintWidget = (editor, monaco) => {
+    const hintNode = document.createElement("div");
+    hintNode.className = "monaco-hint-widget";
+    hintNode.style.background = "#1e1e1e";
+    hintNode.style.color = "#d4d4d4";
+    hintNode.style.padding = "5px";
+    hintNode.style.borderRadius = "3px";
+    hintNode.style.position = "absolute";
+    hintNode.style.zIndex = "10";
+    hintNode.style.display = "none";
+
+    console.log("Hint Widget created");
+
+    const widget = {
+      domNode: hintNode,
+      getId: () => "hint.widget",
+      getDomNode: () => hintNode,
+      getPosition: () => {
+        const position = editor.getPosition();
+        return {
+          position,
+          preference: [monaco.editor.ContentWidgetPositionPreference.BELOW],
+        };
+      },
+      updateContent: (content) => {
+        hintNode.textContent = content;
+      },
+      show: () => {
+        hintNode.style.display = "block";
+      },
+      hide: () => {
+        hintNode.style.display = "none";
+      },
+    };
+
+    editor.addContentWidget(widget);
+    return widget;
   };
 
   const onSelect = (language) => {
+    console.log("Language selected:", language);
     setLanguage(language);
     setValue("");
   };
 
   const handleChange = (newValue) => {
+    console.log("Editor value changed:", newValue);
     setValue(newValue);
 
     if (typingTimeout) {
       clearTimeout(typingTimeout);
+      console.log("Typing timeout cleared");
     }
 
     if (isCopilotEnabled) {
@@ -36,11 +170,18 @@ const CodeEditor = () => {
         setTimeout(async () => {
           if (editorRef.current) {
             const sourceCode = editorRef.current.getValue();
+            console.log("handleChange: Fetching suggestions for:", sourceCode);
             try {
-              const suggestions = await getSuggestions(sourceCode);
-              if (suggestions && !sourceCode.includes(suggestions)) {
-                setValue((prevValue) => ` ${prevValue.trim()}\n${suggestions}`);
-              }
+              const suggestionResult = await getSuggestions(
+                sourceCode,
+                language
+              );
+              console.log(
+                "handleChange: Suggestions received:",
+                suggestionResult
+              );
+              setSuggestions(suggestionResult);
+              setShowHint(true);
             } catch (error) {
               console.error("Error fetching suggestions:", error);
             }
@@ -65,7 +206,6 @@ const CodeEditor = () => {
 
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.sub;
-      console.log(userId);
       const response = await axios.post(
         "http://127.0.0.1:8000/api/code_submission",
         {

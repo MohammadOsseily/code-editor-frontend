@@ -87,17 +87,17 @@ const EditUser = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-end  ">
           <button
             type="button"
-            className="btn btn-outline btn-error text-white px-4 py-2 rounded border-red-100 border-2"
+            className="cancel-border btn btn-outline w-40 mr-2 btn-error text-white px-4 py-2 rounded "
             onClick={handleCancel}
           >
             Cancel
           </button>
           <button
             type="button"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="confirm-border w-40 btn btn-outline btn-info px-4 py-2 mr-2 rounded"
             onClick={handleConfirm}
           >
             Confirm

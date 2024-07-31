@@ -41,7 +41,7 @@ function App() {
           <Route path="/submissions" element={<CodeSubmissions />} />
           <Route path="/submissions" element={<CodeSubmissions />} />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Router>
   );

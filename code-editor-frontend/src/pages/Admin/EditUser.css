@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.cancel-border {
+  border: solid 1px red;
+}
+.confirm-border {
+  border: solid 1px #1d4ed8;
+}

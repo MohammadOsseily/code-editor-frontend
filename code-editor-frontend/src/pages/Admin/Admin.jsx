@@ -6,14 +6,22 @@ import "./Admin.css";
 const Admin = () => {
   const [users, setUsers] = useState([]);
   const [file, setFile] = useState(null);
+  const [reload, setReload] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
       .post("http://127.0.0.1:8000/api/user/get")
-      .then((response) => setUsers(response.data))
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setUsers(response.data);
+        } else {
+          console.error("Unexpected data format:", response.data);
+          setUsers([]);
+        }
+      })
       .catch((error) => console.error("Error fetching users:", error));
-  }, []);
+  }, [reload]);
 
   const handleEditButton = (userId) => {
     navigate(`/edit-user/${userId}`);
@@ -58,7 +66,13 @@ const Admin = () => {
       })
       .then((response) => {
         alert("Data imported successfully!");
-        setUsers(response.data);
+        if (Array.isArray(response.data)) {
+          setUsers(response.data);
+        } else {
+          console.error("Unexpected data format after import:", response.data);
+          setUsers([]);
+        }
+        setReload((prev) => !prev);
       })
       .catch((error) => {
         console.error("Error importing data:", error);

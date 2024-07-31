@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "../pages/Home/styles.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import "../pages/Home/styles.css";
 
 const Navebar = () => {
   const [role, setRole] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/register";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -20,9 +23,11 @@ const Navebar = () => {
         setIsLoggedIn(false);
       }
     } else {
-      navigate("/login");
+      if (!isAuthPage) {
+        navigate("/login");
+      }
     }
-  }, [navigate]);
+  }, [navigate, location.pathname, isAuthPage]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -55,11 +60,11 @@ const Navebar = () => {
             tabIndex={0}
             className="menu menu-sm text-2xl dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            {role === "admin" ? (
+            {!isAuthPage && role === "admin" ? (
               <li>
                 <a href="/admin">Users</a>
               </li>
-            ) : (
+            ) : !isAuthPage && role === "user" ? (
               <>
                 <li>
                   <a href="/home">Home</a>
@@ -71,18 +76,18 @@ const Navebar = () => {
                   <a href="/editor">Editor</a>
                 </li>
               </>
-            )}
+            ) : null}
           </ul>
         </div>
         <a className="btn btn-ghost text-2xl">AppName</a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal text-xl px-1">
-          {role === "admin" ? (
+          {!isAuthPage && role === "admin" ? (
             <li>
               <a href="/admin">Users</a>
             </li>
-          ) : (
+          ) : !isAuthPage && role === "user" ? (
             <>
               <li>
                 <a href="/home">Home</a>
@@ -94,12 +99,12 @@ const Navebar = () => {
                 <a href="/editor">Editor</a>
               </li>
             </>
-          )}
+          ) : null}
         </ul>
       </div>
       <div className="navbar-end flex flex-row">
         {isLoggedIn ? (
-          <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm  md:h-16 md:w-44 md:text-base">
+          <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm md:h-16 md:w-44 md:text-base">
             <div className="pl-2 text-base text-white hover:text-gray-500">
               <button onClick={handleLogout} className="btn btn-ghost">
                 Logout
@@ -107,11 +112,11 @@ const Navebar = () => {
             </div>
           </div>
         ) : (
-          <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm  md:h-16 md:w-44 md:text-base">
+          <div className="w-36 flex h-16 flex-row items-center justify-around rounded-full bg-secondary text-sm md:h-16 md:w-44 md:text-base">
             <div className="pl-2 text-base text-white hover:text-gray-500">
               <a href={"/login"}>Login</a>
             </div>
-            <div className=" ml-1 flex h-12 w-16 items-center justify-center rounded-full bg-gray-300 text-lg  hover:brightness-90 md:ml-2 md:h-12 md:w-20   md:text-base">
+            <div className="ml-1 flex h-12 w-16 items-center justify-center rounded-full bg-gray-300 text-lg hover:brightness-90 md:ml-2 md:h-12 md:w-20 md:text-base">
               <a href={"/register"}>Sign Up</a>
             </div>
           </div>

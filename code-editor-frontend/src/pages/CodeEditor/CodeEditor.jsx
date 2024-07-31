@@ -4,7 +4,8 @@ import { Editor } from "@monaco-editor/react";
 import LanguageSelector from "./LanguageSelector";
 import Output from "./Output";
 import { getSuggestions } from "../../api";
-
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const CodeEditor = () => {
   const editorRef = useRef();
@@ -38,7 +39,7 @@ const CodeEditor = () => {
             try {
               const suggestions = await getSuggestions(sourceCode);
               if (suggestions && !sourceCode.includes(suggestions)) {
-                setValue((prevValue) => `${prevValue.trim()}\n${suggestions}`);
+                setValue((prevValue) => ` ${prevValue.trim()}\n${suggestions}`);
               }
             } catch (error) {
               console.error("Error fetching suggestions:", error);
@@ -61,9 +62,9 @@ const CodeEditor = () => {
         alert("User is not authenticated.");
         return;
       }
-      
+
       const decodedToken = jwtDecode(token);
-      const userId = decodedToken.sub; 
+      const userId = decodedToken.sub;
       console.log(userId);
       const response = await axios.post(
         "http://127.0.0.1:8000/api/code_submission",
@@ -87,19 +88,10 @@ const CodeEditor = () => {
             <LanguageSelector language={language} onSelect={onSelect} />
             <Button
               style={{ alignSelf: "center", marginTop: "35px" }}
-            <Button
-              style={{ alignSelf: "center", marginTop: "35px" }}
               onClick={() => setIsCopilotEnabled(!isCopilotEnabled)}
               colorScheme={isCopilotEnabled ? "green" : "red"}
             >
               {isCopilotEnabled ? "Disable" : "Enable"} Copilot
-            </Button>
-            <Button
-              style={{ alignSelf: "center", marginTop: "35px" }}
-              onClick={handleSaveCode}
-              colorScheme="blue"
-            >
-              Save Code
             </Button>
             <Button
               style={{ alignSelf: "center", marginTop: "35px" }}

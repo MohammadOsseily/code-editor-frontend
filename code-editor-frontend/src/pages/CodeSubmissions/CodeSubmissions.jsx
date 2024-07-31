@@ -3,7 +3,7 @@ import "./CodeSubmissions.css";
 import { IoIosDownload } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode";
 
 const EmptyComponent = () => {
   return <div className="empty-space"></div>;
@@ -15,17 +15,15 @@ const CodeSubmissions = () => {
   const [codeToDelete, setCodeToDelete] = useState(null);
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
     if (token) {
-
       const decodedToken = jwtDecode(token);
-      const userId = decodedToken.sub; 
+      const userId = decodedToken.sub;
 
       axios
         .get(`http://127.0.0.1:8000/api/code_submission/${userId}`)
         .then((response) => {
-          console.log('Fetched codes:', response.data.codes);
+          console.log("Fetched codes:", response.data.codes);
           setCodes(response.data.codes);
         })
         .catch((error) => {
@@ -99,7 +97,10 @@ const CodeSubmissions = () => {
           </svg>
           <span>Are you sure you want to delete this code?</span>
           <div>
-            <button className="btn btn-sm mr-2 bg-neutral" onClick={cancelDelete}>
+            <button
+              className="btn btn-sm mr-2 bg-neutral"
+              onClick={cancelDelete}
+            >
               Cancel
             </button>
             <button className="btn btn-sm btn-error" onClick={confirmDelete}>
@@ -119,13 +120,15 @@ const CodeSubmissions = () => {
                 <h2 className="card-title">{codeData.name}'s Code</h2>
                 <pre className="card-text">{codeData.code}</pre>
                 <div className="card-actions justify-end">
-                  <IoIosDownload 
+                  <IoIosDownload
                     className="icon download-icon"
-                    onClick={() => handleDownload(codeData.code, `${codeData.name}_code.txt`)} 
+                    onClick={() =>
+                      handleDownload(`codeData.code, ${codeData.name}_code.txt`)
+                    }
                   />
-                  <MdDelete 
+                  <MdDelete
                     className="icon delete-icon"
-                    onClick={() => handleDelete(codeData.id)} 
+                    onClick={() => handleDelete(codeData.id)}
                   />
                 </div>
               </div>

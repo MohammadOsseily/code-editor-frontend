@@ -21,7 +21,7 @@ const Message = ({ chatId }) => {
     setSenderId(userId);
 
     axios
-      .get(`http://localhost:8000/api/messages/${chatId}`, {
+      .get(`http://localhost:8000/api/message/${chatId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

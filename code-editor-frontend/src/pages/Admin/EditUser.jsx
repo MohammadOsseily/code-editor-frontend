@@ -54,7 +54,7 @@ const EditUser = () => {
   };
 
   return (
-    <div className="edit-user-container p-4 bg-secondary h-screen">
+    <div className="edit-user-container w-3/4 mx-auto p-4 bg-secondary h-screen">
       <h1 className="text-2xl font-bold mb-4 text-white">Edit User</h1>
       <form className="edit-user-form">
         <div className="mb-4">
@@ -90,7 +90,7 @@ const EditUser = () => {
         <div className="flex items-center justify-between">
           <button
             type="button"
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="btn btn-outline btn-error text-white px-4 py-2 rounded border-red-100 border-2"
             onClick={handleCancel}
           >
             Cancel

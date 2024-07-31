@@ -1,33 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #2c2c2c;
-    color: #f0f0f0; 
-  }
-  
-  .footer-content {
-    display: flex;
-    align-items: center;
-  }
-  
-  .footer-content p {
-    margin-left: 0.5rem;
-  }
-  
-  .footer-nav {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .footer-icon {
-    fill: #f0f0f0;
-    cursor: pointer;
-    transition: fill 0.2s ease-in-out;
-  }
-  
-  .footer-icon:hover {
-    fill: #999;
-  }
-  
+  margin-top: 20px;
+  border-top: 1px white solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #252a34;
+  color: #f0f0f0;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+}
+
+.footer-content p {
+  margin-left: 0.5rem;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-icon {
+  fill: #f0f0f0;
+  cursor: pointer;
+  transition: fill 0.2s ease-in-out;
+}
+
+.footer-icon:hover {
+  fill: #999;
+}

@@ -12,6 +12,8 @@ import Navebar from "./components/Navbar";
 import CodeSubmissions from "./pages/CodeSubmissions/CodeSubmissions";
 
 import "./pusher";
+import ChatPage from "./pages/Chat/page";
+import MessagePage from "./pages/Message/page";
 
 function App() {
   return (
@@ -19,15 +21,14 @@ function App() {
       <div>
         <Navebar />
         {/* <ChatPage /> */}
-        <div className="container mx-auto p-4">
-          <ChatPage />
-        </div>
+
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
+          <Route path="/messages/:chatId" element={<MessagePage />} />
           <Route
             path="/editor"
             element={

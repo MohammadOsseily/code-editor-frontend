@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   margin: 0;
@@ -8,6 +11,7 @@
 
 body {
   font-family: "Poppins", sans-serif;
+  background-color: #252a34;
 }
 
 /* Apply the background image only to the login and register pages */
@@ -16,7 +20,23 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: url('./assets/background.jpg') no-repeat;
+  background: url("./assets/background.jpg") no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+.chat-end .chat-bubble {
+  background-color: #6edb52;
+  color: #252a34;
+}
+.chat-bubble:before {
+  position: absolute;
+  bottom: 0px;
+  height: 0.75rem /* 12px */;
+  width: 0 /* 12px */ !important;
+  background-color: inherit;
+  content: "";
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
 }

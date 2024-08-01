@@ -37,7 +37,7 @@ const MessagePage = () => {
 
   return (
     <div className="w-3/4 mx-auto pt-5 bg-secondary">
-      <h1 className="text-4xl text-primary font-bold mb-4">{otherUser}</h1>
+      <h1 className="text-4xl text-primary pl-8 font-bold mb-4">{otherUser}</h1>
       <Message chatId={chatId} />
     </div>
   );

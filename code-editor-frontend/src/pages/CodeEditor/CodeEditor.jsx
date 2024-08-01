@@ -24,7 +24,7 @@ const CodeEditor = () => {
   }, []);
 
   useEffect(() => {
-    console.log("suggestions state updated:", suggestions);
+    console.log("Suggestions state updated:", suggestions);
     if (hintWidget && editorRef.current) {
       if (showHint && suggestions) {
         console.log("Hint Widget: Showing hint with suggestions:", suggestions);
@@ -45,70 +45,42 @@ const CodeEditor = () => {
 
     setHintWidget(createHintWidget(editor, monaco));
 
-    editor.addAction({
-      id: "apply-suggestion",
-      label: "Apply Suggestion",
-      keybindings: [monaco.KeyCode.Tab],
-      run: () => {
-        console.log("Action: Tab key pressed - running applySuggestion");
-        applySuggestion();
-      },
-    });
-
     editor.onKeyDown((e) => {
       if (e.keyCode === monaco.KeyCode.Tab) {
-        console.log("Event: Tab key pressed");
         e.preventDefault();
-        applySuggestion();
       } else {
-        console.log("Event: Other key pressed");
-        setShowHint(false);
-        hintWidget && hintWidget.hide();
+        setShowHint(false); // Hide suggestions on any key press
+        if (hintWidget) hintWidget.hide(); // Ensure the hint widget is hidden
       }
     });
   };
 
-  const applySuggestion = () => {
-    console.log("applySuggestion: Function called");
-
+  const insertSuggestion = () => {
     const editor = editorRef.current;
     const monaco = monacoRef.current;
 
-    if (!editor || !monaco) {
-      console.log("applySuggestion: Editor or Monaco instance not ready");
-      return;
-    }
+    if (!editor || !monaco || !suggestions) return;
 
-    console.log("applySuggestion: Current suggestions state:", suggestions);
+    const position = editor.getPosition();
+    const range = new monaco.Range(
+      position.lineNumber,
+      position.column,
+      position.lineNumber,
+      position.column
+    );
 
-    if (suggestions && suggestions.trim() !== "") {
-      console.log("applySuggestion: Applying suggestion:", suggestions);
+    editor.executeEdits("insert-suggestion", [
+      {
+        range: range,
+        text: suggestions,
+        forceMoveMarkers: true,
+      },
+    ]);
 
-      const position = editor.getPosition();
-      const range = new monaco.Range(
-        position.lineNumber,
-        position.column,
-        position.lineNumber,
-        position.column
-      );
-
-      editor.executeEdits("apply-suggestion", [
-        {
-          range: range,
-          text: suggestions,
-          forceMoveMarkers: true,
-        },
-      ]);
-
-      setValue(editor.getValue());
-      console.log("applySuggestion: Updated editor value:", editor.getValue());
-
-      setSuggestions("");
-      setShowHint(false);
-      hintWidget && hintWidget.hide();
-    } else {
-      console.log("applySuggestion: No suggestions available or state issue");
-    }
+    setValue(editor.getValue());
+    setSuggestions("");
+    setShowHint(false);
+    hintWidget && hintWidget.hide();
   };
 
   const createHintWidget = (editor, monaco) => {
@@ -232,6 +204,13 @@ const CodeEditor = () => {
               colorScheme={isCopilotEnabled ? "green" : "red"}
             >
               {isCopilotEnabled ? "Disable" : "Enable"} Copilot
+            </Button>
+            <Button
+              style={{ alignSelf: "center", marginTop: "35px" }}
+              onClick={insertSuggestion}
+              colorScheme="blue"
+            >
+              Apply Suggestion
             </Button>
             <Button
               style={{ alignSelf: "center", marginTop: "35px" }}

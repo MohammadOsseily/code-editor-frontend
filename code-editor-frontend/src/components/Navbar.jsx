@@ -79,7 +79,7 @@ const Navebar = () => {
             ) : null}
           </ul>
         </div>
-        <a className="btn btn-ghost text-2xl">AppName</a>
+        <a className="btn btn-ghost text-2xl">Engineers</a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal text-xl px-1">
